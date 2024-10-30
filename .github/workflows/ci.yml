@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:alpine
+    env:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    options: >-
+      --health-cmd "pg_isready -U user" 
+      --health-interval 10s 
+      --health-timeout 5s 
+      --health-retries 5
+steps:
+  - name: Check out code
+    uses: actions/checkout@v2
+  
+  - name: Set up Node.js
+    uses: actions/setup-node@v2
+    with:
+      node-version: '14'
+
+  - name: Install dependencies
+    run: npm install
+
+
+- name: Run Linter
+  run: npm run lint
+
+
+- name: Run Unit Tests
+  run: npm test
